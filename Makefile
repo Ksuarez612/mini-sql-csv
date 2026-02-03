@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -std=c11 -Wall -Wextra -Werror -Iinclude -g
 
 TARGET = csql
-SRC = src/main.c src/csv.c
+SRC = src/main.c src/csv.c src/query.c
 OBJ = $(SRC:.c=.o)
 
 all: $(TARGET)
