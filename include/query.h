@@ -14,23 +14,19 @@ typedef enum {
 } WhereOp;
 
 typedef struct {
-    // SELECT
     char **select_cols;
     size_t nselect;
     int select_all;
 
-    // FROM
     char *from_path;
 
-    // WHERE (optional)
     int has_where;
     char *where_col;
     WhereOp where_op;
-    char *where_val;   // raw value as string (unquoted)
+    char *where_val;   
     int where_is_num;
     long where_num;
 
-    // LIMIT (optional)
     int has_limit;
     long limit;
 } Query;

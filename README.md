@@ -25,4 +25,8 @@ Alice,21,NY
 Bob,19,NJ
 Carol,25,NY
 Dan,22,CA
+<<<<<<< HEAD
 ```
+=======
+```
+>>>>>>> 89a6a85747fadf4a69f3c7a98d0bf5ae75547313

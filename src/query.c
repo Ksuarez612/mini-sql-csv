@@ -22,7 +22,6 @@ static int match_kw(const char *p, const char *kw) {
         if (tolower((unsigned char)*p) != tolower((unsigned char)*kw)) return 0;
         p++; kw++;
     }
-    // ensure keyword boundary (space/end)
     if (*p && !isspace((unsigned char)*p)) return 0;
     return 1;
 }
@@ -50,17 +49,16 @@ static int parse_number(const char *s, long *out) {
 static int parse_value(const char **pp, char **out) {
     const char *p = skip_ws(*pp);
     if (*p == '"') {
-        p++; // skip opening quote
+        p++; 
         const char *start = p;
         while (*p && *p != '"') p++;
-        if (*p != '"') return -1; // missing closing quote
+        if (*p != '"') return -1; 
         *out = dup_range(start, p);
         if (!*out) return -1;
-        p++; // skip closing quote
+        p++; 
         *pp = p;
         return 0;
     } else {
-        // read until whitespace
         const char *start = p;
         while (*p && !isspace((unsigned char)*p)) p++;
         if (p == start) return -1;
@@ -91,7 +89,6 @@ int parse_query(const char *input, Query *out) {
 
     const char *p = skip_ws(input);
 
-    // SELECT
     if (!match_kw(p, "select")) return -1;
     p += 6;
     p = skip_ws(p);
@@ -120,30 +117,26 @@ int parse_query(const char *input, Query *out) {
             out->select_cols[out->nselect++] = col;
 
             p = skip_ws(p);
-            if (*p == ',') p++; // consume comma
+            if (*p == ',') p++;
         }
     }
-
-    // FROM
     p = skip_ws(p);
     if (!match_kw(p, "from")) return -1;
     p += 4;
     p = skip_ws(p);
 
-    // path until whitespace
     const char *path_start = p;
     while (*p && !isspace((unsigned char)*p)) p++;
     if (p == path_start) return -1;
     out->from_path = dup_range(path_start, p);
     if (!out->from_path) return -1;
 
-    // Optional WHERE and/or LIMIT
     while (1) {
         p = skip_ws(p);
         if (!*p) break;
 
         if (match_kw(p, "where")) {
-            if (out->has_where) return -1; // only one WHERE supported
+            if (out->has_where) return -1; 
             p += 5;
 
             out->has_where = 1;
@@ -165,7 +158,6 @@ int parse_query(const char *input, Query *out) {
             p += 5;
             p = skip_ws(p);
 
-            // read number token
             const char *start = p;
             while (*p && !isspace((unsigned char)*p)) p++;
             if (p == start) return -1;
@@ -183,7 +175,6 @@ int parse_query(const char *input, Query *out) {
             continue;
         }
 
-        // unknown trailing token
         return -1;
     }
 

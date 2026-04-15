@@ -25,8 +25,8 @@ typedef struct {
     Query *q;
     int *sel_idx;
     size_t nsel;
-    int where_idx;        // column index for WHERE, or -1
-    long printed;         // how many rows printed so far
+    int where_idx;       
+    long printed;         
 } Runtime;
 
 static int where_matches(const Query *q, const CsvRow *row, int where_idx) {
@@ -35,7 +35,6 @@ static int where_matches(const Query *q, const CsvRow *row, int where_idx) {
 
     const char *field = row->fields[where_idx];
 
-    // Numeric comparison
     if (q->where_is_num) {
         long fv = 0;
         if (!parse_long(field, &fv)) {
@@ -56,7 +55,6 @@ static int where_matches(const Query *q, const CsvRow *row, int where_idx) {
         }
     }
 
-    // String comparison
     int cmp = strcmp(field, q->where_val);
 
     if (q->where_op != OP_EQ && q->where_op != OP_NEQ) {
@@ -74,10 +72,9 @@ static int print_selected(const CsvHeader *hdr, const CsvRow *row, void *user) {
     Query *q = rt->q;
 
     int wm = where_matches(q, row, rt->where_idx);
-    if (wm < 0) return 1;   // hard error -> stop reading
-    if (wm == 0) return 0;  // no match -> skip row
+    if (wm < 0) return 1;   
+    if (wm == 0) return 0;  
 
-    // LIMIT check (stop early)
     if (q->has_limit && rt->printed >= q->limit) {
         return 1;
     }
@@ -121,7 +118,6 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    // Build selected column indices once (faster + cleaner)
     int *sel_idx = NULL;
     size_t nsel = 0;
 

@@ -11,7 +11,6 @@ static void trim_newline(char *s) {
     }
 }
 
-// Very simple split: commas only (no quoted commas yet)
 static int split_commas(const char *line_in, char ***out_fields, size_t *out_n) {
     char *line = strdup(line_in);
     if (!line) return -1;
